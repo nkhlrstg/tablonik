@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+
+</head>
+<body>
+    <audio id="rightAudio" src="./sounds/right.mp3"></audio>
+    <audio id="wrongAudio" src="./sounds/wrong.mp3"></audio>
+    <div class="modal" id="modalId" style="display: none;">
+        <img class="modal-image" id="right" style="display: none;" src="./img/right.png" alt="">
+        <img class="modal-image" id="wrong" style="display: none;" src="./img/wrong.png" alt="">
+        <img class="play" id="playBtn" src="./img/play.png" alt="">
+    </div>
+    <h1>Tables (2 to 20)</h1>
+    <div class="main-div">
+    <img class="bg-image" src="./img/girl-with-blackboard.svg" alt="">
+    <div class="last-para" id="main"><div class="inside-para"><span id="tableNum"></span> × <span id="randNum"></span> = <input type="number" id="ans" onfocus="vibrate()" autofocus="true"></div></div>
+</div>
+    <p class="inline">From
+        <select name="from" id="from" class="selects" onclick="vibrate()">
+            <script>
+                for (let i = 2; i <= 20; i++) {
+                    if(i == 2){
+                        from.innerHTML += `<option id=${i} value=${i} selected>${i}</option>`;                    
+                    }
+                    else{
+                        from.innerHTML += `<option id=${i} value=${i}>${i}</option>`;                    
+                    }                  
+                }
+            </script>
+        </select>
+        <span>&nbsp;to&nbsp;</span>
+        <select id="to" class="selects" onclick="vibrate()">
+            <script>
+                for (let i = 2; i <= 20; i++) {
+                    if(i == 2){
+                        to.innerHTML += `<option id=${i} value=${i} selected>${i}</option>`;                    
+                    }
+                    else{
+                        to.innerHTML += `<option id=${i} value=${i}>${i}</option>`;                    
+                    }
+                }
+            </script>
+        </select>
+    </p>
+    <script>
+        let i = from.value;
+        let v = to.value;
+        from.addEventListener('change', () => {
+            to.innerHTML = '';
+            for (let i = from.value; i <= 20; i++) {
+                to.innerHTML += `<option id=${i} value=${i}>${i}</option>`;
+                
+            }
+            load();
+
+        })
+        to.addEventListener('change', () => {
+            load();
+        })
+            
+        load();
+
+        function vibrate(duration = 300)
+    {
+        if (navigator.vibrate) {
+            navigator.vibrate(duration);
+        }
+    }
+        function load(){
+            i = parseInt(from.value);
+            v = parseInt(to.value);
+            tableNum.innerText = random(i, v);
+            randNum.innerText = random(2, 10);
+        }
+
+        function random(min, max){
+            console.log('min',  typeof min);
+            console.log('max', typeof max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        function debounce(callback){
+            let timer;
+            return function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    callback();
+                }, 1500);
+            } 
+
+        }
+        ans.addEventListener('keydown', debounce(change))
+        function change(){
+            if((tableNum.innerText * randNum.innerText) == ans.value){
+                load();
+                playBtn.style.transform = 'scale(1)';
+                ans.value = '';
+                modalId.style.display = 'grid';
+                rightAudio.play();
+                right.style.display = "block";
+                playBtn.addEventListener('click', ()=>{
+                    vibrate();
+                    playBtn.style.transform = 'scale(0.8)';
+                    modalId.style.display = 'none';
+                    right.style.display = "none";
+                    ans.autofocus;
+                })
+            }
+            else{
+                ans.value = '';
+                playBtn.style.transform = 'scale(1)';
+
+                modalId.style.display = 'grid';
+                wrongAudio.play();
+                wrong.style.display = "block";
+                playBtn.addEventListener('click', ()=>{
+                    vibrate();
+
+                    playBtn.style.transform = 'scale(0.8)';
+                    modalId.style.display = 'none';
+                    wrong.style.display = "none";
+                    ans.autofocus;
+                })
+            }
+        }
+
+    </script>
+</body>
+</html>
