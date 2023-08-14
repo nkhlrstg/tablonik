@@ -48,7 +48,7 @@ h1{
 }
 .inside-para, .inside-para > *
 {
-    color: red;
+    color: yellow;
 }
 #ans
 {
